@@ -20,6 +20,16 @@
   (major1) == 4 && (major2) <  20 || \
   (major1) == 4 && (major2) == 20 && (minor) <= 2)
 #endif /* MIN_VERSION_base */
+/* package random-1.2.1.3 */
+#ifndef VERSION_random
+#define VERSION_random "1.2.1.3"
+#endif /* VERSION_random */
+#ifndef MIN_VERSION_random
+#define MIN_VERSION_random(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  2 || \
+  (major1) == 1 && (major2) == 2 && (minor) <= 1)
+#endif /* MIN_VERSION_random */
 /* package threepenny-gui-0.9.4.2 */
 #ifndef VERSION_threepenny_gui
 #define VERSION_threepenny_gui "0.9.4.2"
@@ -103,7 +113,7 @@
 #endif /* MIN_TOOL_VERSION_runghc */
 
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "nonograms-0.1.0.0-AZTjg17R3bh7rVMwQBJeYu-nonograms"
+#define CURRENT_COMPONENT_ID "nonograms-0.1.0.0-HI43Hf8R59yL8lHuLPHtZy-nonograms"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"
