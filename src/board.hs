@@ -1,6 +1,7 @@
 module Board where
 
 import Types
+import Data.List (transpose)
 
 -- Safe index: returns Nothing when out of bounds
 safeIndex :: Int -> [a] -> Maybe a
@@ -83,3 +84,12 @@ getCellM r c b = do
         row <- safeIndex r b
         safeIndex c row
 
+isSolved :: Game -> Bool
+isSolved g = all rowMatches (zip (rowClues g) (board g))
+          && all colMatches (zip (colClues g) (transpose (board g)))
+
+rowMatches :: ([Int], Row) -> Bool
+rowMatches (clues, row) = computeClues row == clues
+
+colMatches :: ([Int], Row) -> Bool
+colMatches (clues, col) = computeClues col == clues
