@@ -3,6 +3,7 @@ module Board where
 import Types
 import Data.List (transpose)
 
+
 -- Safe index: returns Nothing when out of bounds
 safeIndex :: Int -> [a] -> Maybe a
 safeIndex i xs
@@ -50,6 +51,20 @@ setCell (r,c) val b = do
     newRow <- updateAt c (const val) row
     updateAt r (const newRow) b
 
+setCellsFull :: [(Int,Int)] -> Cell -> Board -> Board
+setCellsFull coords target board =
+    [ [ if (r,c) `elem` coords
+          then target
+          else opposite target
+      | c <- [0 .. cols board - 1] ]
+    | r <- [0 .. rows board - 1] ]
+
+
+opposite :: Cell -> Cell
+opposite Filled  = Empty
+opposite Empty   = Filled
+opposite Unknown = Unknown 
+
 rows :: Board -> Int
 rows = length
 
@@ -63,12 +78,23 @@ boardSize b = (rows b, cols b)
 
 -- Compute clues for a single row (treat Unknown as Empty)
 computeClues :: Row -> [Int]
-computeClues = reverse . foldl go []
+computeClues row = go row [] 0
   where
-    go [] Filled = [1]
-    go (x:xs) Filled = (x+1):xs
-    go acc Empty = acc
-    go acc Unknown = acc
+    go [] acc 0 = reverse acc
+    go [] acc n = reverse (n : acc)
+    go (Filled:xs) acc n = go xs acc (n+1)
+    go (Empty:xs) acc 0 = go xs acc 0
+    go (Empty:xs) acc n = go xs (n:acc) 0
+    go (Unknown:xs) acc 0 = go xs acc 0
+    go (Unknown:xs) acc n = go xs (n:acc) 0
+
+
+computeBoardClues :: Board -> ([[Int]], [[Int]])
+computeBoardClues board =
+    let rowClues = map computeClues board
+        colClues = map computeClues (transpose board)
+    in (rowClues, colClues)
+
 
 -- Pretty-print board to string for terminal/debugging
 showBoard :: Board -> String
