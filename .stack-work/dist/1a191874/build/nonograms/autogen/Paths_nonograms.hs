@@ -47,7 +47,7 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 bindir     = "C:\\Nonograms\\.stack-work\\install\\972d3849\\bin"
-libdir     = "C:\\Nonograms\\.stack-work\\install\\972d3849\\lib\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0-HI43Hf8R59yL8lHuLPHtZy-nonograms"
+libdir     = "C:\\Nonograms\\.stack-work\\install\\972d3849\\lib\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0-8Q52qArW5t6KcYffpJoYoI-nonograms"
 dynlibdir  = "C:\\Nonograms\\.stack-work\\install\\972d3849\\lib\\x86_64-windows-ghc-9.10.3-b42a"
 datadir    = "C:\\Nonograms\\.stack-work\\install\\972d3849\\share\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
 libexecdir = "C:\\Nonograms\\.stack-work\\install\\972d3849\\libexec\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
