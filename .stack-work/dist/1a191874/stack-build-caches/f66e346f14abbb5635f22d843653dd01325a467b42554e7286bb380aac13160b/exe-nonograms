@@ -3,10 +3,20 @@ C:\Users\kelen\Documents\GitHub\Nonograms\CHANGELOG.md:
 C:\Users\kelen\Documents\GitHub\Nonograms\README.md:
   hash: 2283381081431a36c07e66254435d52c102c077e65224486037a7a0c787d5d8b
 C:\Users\kelen\Documents\GitHub\Nonograms\nonograms.cabal:
-  hash: 83447d18497af53c14dee1c3a328a3e65ac7105af96c76a9c9f3f065556756cd
+  hash: 004fb2ce026a5b831a87282c86509db2f3a4ef7262b7d7411d0c27198cfd3af1
 C:\Users\kelen\Documents\GitHub\Nonograms\src\Board.hs:
-  hash: 21877b3ecd845ff4490597c142ab2aad29bb9abd7970ba7dbc2819e01b6dcabe
+  hash: 28a2111b4fe7f8d2161245ec566b0d4e02a36003fb1ba976fd9732c0d654fd97
+C:\Users\kelen\Documents\GitHub\Nonograms\src\Game.hs:
+  hash: fe2d6482c4e9f91592b621342104c33e15a1a4f99de9884321c94ce4fc82e3c1
+C:\Users\kelen\Documents\GitHub\Nonograms\src\LevelSelection.hs:
+  hash: 0ae26d02d35528f2d8a59c48ce7d725e37acdc6a89c5dac6981ea69a5d18afb7
+C:\Users\kelen\Documents\GitHub\Nonograms\src\Levels\Level1.hs:
+  hash: abf172acd14314fbd45be1183e98e4557d3c9f744ee629131dfa666c31c9126b
+C:\Users\kelen\Documents\GitHub\Nonograms\src\Levels\Level2.hs:
+  hash: a0f08be9fa81ee0089dbc3731f6dde88c2ffc65567917ade184092e3d4d7e341
 C:\Users\kelen\Documents\GitHub\Nonograms\src\Main.hs:
-  hash: 2f3f7a90b7eb81dcea232a8a39eb1e6248064365ded2fb60cde18008609a3651
+  hash: 8bf191c2d7076e82b1fe30c60397de1850896e6c3ce37de882a9d6b00a86e9ac
 C:\Users\kelen\Documents\GitHub\Nonograms\src\Types.hs:
   hash: fcc18ca8e6a316ed8a6598c969116421e2f47cc56c29f7a2967d3cf0fc63c442
+C:\Users\kelen\Documents\GitHub\Nonograms\src\Welcome.hs:
+  hash: b914c5e974ab0c9733b375c0e22d51795e701c4d7c9509ba6b13382c1fa399be
