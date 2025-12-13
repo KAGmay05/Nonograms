@@ -46,12 +46,12 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
-bindir     = "C:\\Nonograms\\.stack-work\\install\\972d3849\\bin"
-libdir     = "C:\\Nonograms\\.stack-work\\install\\972d3849\\lib\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0-HI43Hf8R59yL8lHuLPHtZy-nonograms"
-dynlibdir  = "C:\\Nonograms\\.stack-work\\install\\972d3849\\lib\\x86_64-windows-ghc-9.10.3-b42a"
-datadir    = "C:\\Nonograms\\.stack-work\\install\\972d3849\\share\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
-libexecdir = "C:\\Nonograms\\.stack-work\\install\\972d3849\\libexec\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
-sysconfdir = "C:\\Nonograms\\.stack-work\\install\\972d3849\\etc"
+bindir     = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\bin"
+libdir     = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\lib\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0-HI43Hf8R59yL8lHuLPHtZy-nonograms"
+dynlibdir  = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\lib\\x86_64-windows-ghc-9.10.3-b42a"
+datadir    = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\share\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
+libexecdir = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\libexec\\x86_64-windows-ghc-9.10.3-b42a\\nonograms-0.1.0.0"
+sysconfdir = "C:\\Users\\kelen\\Documents\\GitHub\\Nonograms\\.stack-work\\install\\c51e1627\\etc"
 
 getBinDir     = catchIO (getEnv "nonograms_bindir")     (\_ -> return bindir)
 getLibDir     = catchIO (getEnv "nonograms_libdir")     (\_ -> return libdir)

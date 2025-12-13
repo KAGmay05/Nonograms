@@ -1,6 +1,6 @@
 module Types where
 
-data Cell = Filled | Empty | Unknown
+data Cell = Filled | Empty | Unknown | MarkedEmpty | Error
     deriving (Eq, Show)
 
 type Row = [Cell]
