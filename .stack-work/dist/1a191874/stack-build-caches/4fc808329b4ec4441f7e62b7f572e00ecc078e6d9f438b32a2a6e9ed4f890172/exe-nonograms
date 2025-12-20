@@ -5,9 +5,9 @@ C:\Nonograms\README.md:
 C:\Nonograms\nonograms.cabal:
   hash: 004fb2ce026a5b831a87282c86509db2f3a4ef7262b7d7411d0c27198cfd3af1
 C:\Nonograms\src\Board.hs:
-  hash: 149376d316f6b7a84b62b3f7cd6a57fa597769cc0191b8548c9565a34622eaf6
+  hash: 81492001c773c970e87782bc6d511109caaf6adfe9946b370525ff9c81ae1300
 C:\Nonograms\src\Game.hs:
-  hash: fe2d6482c4e9f91592b621342104c33e15a1a4f99de9884321c94ce4fc82e3c1
+  hash: 20665cc90e784704ed032f82c47e6f7b9e96a2631094129c5b5a8d1c450183b2
 C:\Nonograms\src\LevelSelection.hs:
   hash: 0ae26d02d35528f2d8a59c48ce7d725e37acdc6a89c5dac6981ea69a5d18afb7
 C:\Nonograms\src\Levels\Level1.hs:

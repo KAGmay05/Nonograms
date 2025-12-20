@@ -114,8 +114,47 @@ isSolved :: Game -> Bool
 isSolved g = all rowMatches (zip (rowClues g) (board g))
           && all colMatches (zip (colClues g) (transpose (board g)))
 
+-- Comprueba si un tablero cumple todas las pistas dadas (filas y columnas).
+boardSatisfies :: [[Int]] -> [[Int]] -> Board -> Bool
+boardSatisfies rc cc b = all rowMatches (zip rc b)
+                      && all colMatches (zip cc (transpose b))
+
 rowMatches :: ([Int], Row) -> Bool
 rowMatches (clues, row) = computeClues row == clues
 
 colMatches :: ([Int], Row) -> Bool
 colMatches (clues, col) = computeClues col == clues
+
+
+-- ----------------------------
+-- VALIDACIÓN PARCIAL DE PISTAS
+-- ----------------------------
+-- Detecta si una fila viola las pistas (existe o no solución parcial) considerando Unknown como flexible.
+rowContradicts :: [Int] -> Row -> Bool
+rowContradicts clues row = not (rowFeasible clues row)
+
+-- ¿Existe alguna colocación de las pistas compatible con los Filled/Empty actuales?
+rowFeasible :: [Int] -> Row -> Bool
+rowFeasible [] r = not (any (== Filled) r)  -- sin pistas restantes: no deben quedar llenos
+rowFeasible (k:ks) r = any tryStart [0 .. length r - k]
+  where
+    tryStart i =
+        let (prefix, rest) = splitAt i r
+            (block, suffix) = splitAt k rest
+        in  -- no puede haber llenos antes del inicio del bloque
+            not (any (== Filled) prefix)
+            -- el bloque no puede pisar Empty
+            && all (/= Empty) block
+            -- si quedan más pistas, debe haber un separador (no Filled)
+            && (null ks || case suffix of
+                              []     -> False
+                              (c:cs) -> c /= Filled)
+            -- continuar con el resto (saltando separador si aplica)
+            && rowFeasible ks (if null ks then suffix else drop 1 suffix)
+
+-- Verifica filas y columnas; True si algún lado contradice.
+boardContradicts :: [[Int]] -> [[Int]] -> Board -> Bool
+boardContradicts rowC colC b =
+    let rowsBad = any (uncurry rowContradicts) (zip rowC b)
+        colsBad = any (uncurry rowContradicts) (zip colC (transpose b))
+    in rowsBad || colsBad
