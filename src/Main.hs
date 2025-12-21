@@ -11,6 +11,10 @@ import Game
 import LevelSelection
 import Levels.Level1 as L1
 import Levels.Level2 as L2
+import Levels.Level3 as L3
+import Levels.Level4 as L4
+import Levels.Level5 as L5
+import Levels.Level6 as L6
 
 
 main :: IO ()
@@ -40,7 +44,10 @@ setup window = mdo
         let (rowClues, colClues) = case levelName of
                 "nono1" -> L1.boardClues
                 "nono2" -> L2.boardClues
-                "nono3" -> L1.boardClues
+                "nono3" -> L3.boardClues
+                "nono4" -> L4.boardClues
+                "nono5" -> L5.boardClues
+                "nono6" -> L6.boardClues
 
 
         (gameDiv, backBtn) <- gamePage window rowClues colClues

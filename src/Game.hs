@@ -53,6 +53,8 @@ gamePage window rowClues colClues = do
     -- ----------------------------
     let game = initGame rowClues colClues
     boardRef <- liftIO $ newIORef (board game)
+    autoRef  <- liftIO $ newIORef ([] :: [(Int,Int)])
+    lockedAutoRef <- liftIO $ newIORef ([] :: [(Int,Int)])
     modeRef  <- liftIO $ newIORef PaintFilled
     let (rCount, cCount) = boardSize (board game)
     cellButtonsRef <- liftIO $ newIORef ([] :: [[Element]])
@@ -187,20 +189,33 @@ gamePage window rowClues colClues = do
                 [ ("width","50px"),("height","50px"),("background-color","#fff"),("border","1.4px solid #ccc") ]
             element boardDiv #+ [element cellBtn]
             on UI.click cellBtn $ \_ -> do
-                mode <- liftIO $ readIORef modeRef
-                liftIO $ modifyIORef boardRef $ \b ->
-                    let current = getCellM r c b
-                    in case mode of
-                        PaintFilled ->
-                            case current of
-                                Just Filled -> maybe b id (setCell (r,c) Unknown b)
-                                _           -> maybe b id (setCell (r,c) Filled b)
-                        PaintEmpty  ->
-                            case current of
-                                Just Empty  -> maybe b id (setCell (r,c) Unknown b)
-                                _           -> maybe b id (setCell (r,c) Empty b)
-
-                updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+                -- No permitir cambios sobre cruces iniciales bloqueadas
+                locked <- liftIO $ readIORef lockedAutoRef
+                if (r,c) `elem` locked
+                  then updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+                  else do
+                    mode <- liftIO $ readIORef modeRef
+                    oldAuto <- liftIO $ readIORef autoRef
+                    liftIO $ modifyIORef boardRef $ \b ->
+                        let current = getCellM r c b
+                            -- Primero limpiar cruces automáticas dinámicas previas
+                            bClean = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Unknown acc)) b oldAuto
+                        in case mode of
+                            PaintFilled ->
+                                case current of
+                                    Just Filled -> maybe bClean id (setCell (r,c) Unknown bClean)
+                                    _           -> maybe bClean id (setCell (r,c) Filled bClean)
+                            PaintEmpty  ->
+                                case current of
+                                    Just Empty  -> maybe bClean id (setCell (r,c) Unknown bClean)
+                                    _           -> maybe bClean id (setCell (r,c) Empty bClean)
+                    -- Recalcular cruces automáticas dinámicas sobre tablero limpio
+                    b1 <- liftIO $ readIORef boardRef
+                    let newAuto = autoEmptyPositions rowClues colClues b1
+                        b2 = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Empty acc)) b1 newAuto
+                    liftIO $ writeIORef boardRef b2
+                    liftIO $ writeIORef autoRef newAuto
+                    updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
             return cellBtn
         liftIO $ modifyIORef cellButtonsRef (++ [rowElems])
 
@@ -349,6 +364,13 @@ gamePage window rowClues colClues = do
     -- Overlay listeners reutilizando los botones existentes
     on UI.click winRetry $ \_ -> do
         liftIO $ writeIORef boardRef (board $ initGame rowCluesEx colCluesEx)
+        -- Reaplicar cruces bloqueadas iniciales
+        bR <- liftIO $ readIORef boardRef
+        let initLocks = autoEmptyPositions rowClues colClues bR
+            bR' = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Empty acc)) bR initLocks
+        liftIO $ writeIORef boardRef bR'
+        liftIO $ writeIORef lockedAutoRef initLocks
+        liftIO $ writeIORef autoRef []
         updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
         void $ element winOverlay # set UI.style [("display","none")]
     on UI.click winBack $ \_ -> do
@@ -360,18 +382,30 @@ gamePage window rowClues colClues = do
 
 
     on UI.click newBtn $ \_ -> do
-        liftIO $ writeIORef boardRef (board $ initGame rowCluesEx colCluesEx)
-        updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
-        void $ element winOverlay # set UI.style [("display","none")]
+        return ()
 
     on UI.click resetBtn $ \_ -> do
         liftIO $ writeIORef boardRef (board $ initGame rowCluesEx colCluesEx)
+        -- Reaplicar cruces bloqueadas iniciales
+        bR <- liftIO $ readIORef boardRef
+        let initLocks = autoEmptyPositions rowClues colClues bR
+            bR' = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Empty acc)) bR initLocks
+        liftIO $ writeIORef boardRef bR'
+        liftIO $ writeIORef lockedAutoRef initLocks
+        liftIO $ writeIORef autoRef []
         updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
         void $ element winOverlay # set UI.style [("display","none")]
 
 
     
     element gameRoot #+ [element winOverlay, element buttonsContainer, element container]
+    -- Autocompletado inicial: marcar cruces automáticas bloqueadas en filas/columnas sin pistas
+    b0 <- liftIO $ readIORef boardRef
+    let autoPos = autoEmptyPositions rowClues colClues b0
+        b1     = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Empty acc)) b0 autoPos
+    liftIO $ writeIORef boardRef b1
+    liftIO $ writeIORef lockedAutoRef autoPos
+    liftIO $ writeIORef autoRef []
     updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
     return (gameRoot, backBtn)
 

@@ -158,3 +158,58 @@ boardContradicts rowC colC b =
     let rowsBad = any (uncurry rowContradicts) (zip rowC b)
         colsBad = any (uncurry rowContradicts) (zip colC (transpose b))
     in rowsBad || colsBad
+
+
+-- ----------------------------
+-- AUTOCOMPLETADO BÁSICO
+-- ----------------------------
+-- Reglas simples de autocompletado:
+--  1) Si una fila no tiene pistas ( [] ), todas las celdas desconocidas se marcan como Empty.
+--  2) Si la suma de pistas ya coincide con el número de Filled colocados, el resto Unknown se marcan Empty.
+--  3) Si computeClues row == clues (las pistas ya están satisfechas), el resto Unknown se marcan Empty.
+-- En presencia de contradicciones, no se realiza ninguna acción.
+
+countFilled :: Row -> Int
+countFilled = length . filter (== Filled)
+
+replaceUnknownWithEmpty :: Row -> Row
+replaceUnknownWithEmpty = map (\c -> case c of
+    Unknown -> Empty
+    x       -> x)
+
+autoCompleteRow :: [Int] -> Row -> Row
+autoCompleteRow clues row
+    | rowContradicts clues row = row
+    | null clues               = replaceUnknownWithEmpty row
+    | sum clues == countFilled row = replaceUnknownWithEmpty row
+    | computeClues row == clues = replaceUnknownWithEmpty row
+    | otherwise                = row
+
+autoCompleteStep :: [[Int]] -> [[Int]] -> Board -> Board
+autoCompleteStep rc cc b =
+    let b1  = zipWith autoCompleteRow rc b
+        b2T = zipWith autoCompleteRow cc (transpose b1)
+    in transpose b2T
+
+-- Aplica autocompletado iterativamente hasta alcanzar un punto fijo.
+autoCompleteBoard :: [[Int]] -> [[Int]] -> Board -> Board
+autoCompleteBoard rc cc = go
+  where
+    go cur =
+        let next = autoCompleteStep rc cc cur
+        in if next == cur then cur else go next
+
+-- Devuelve las posiciones que el autocompletado marcaría como Empty partiendo de Unknown.
+-- Es decir, celdas que pasarían de Unknown -> Empty bajo las reglas actuales.
+autoEmptyPositions :: [[Int]] -> [[Int]] -> Board -> [(Int,Int)]
+autoEmptyPositions rc cc b =
+    let bAuto   = autoCompleteBoard rc cc b
+        (rs,cs) = boardSize b
+    in [ (r,c)
+       | r <- [0 .. rs - 1]
+       , c <- [0 .. cs - 1]
+       , getCellM r c b == Just Unknown
+       , getCellM r c bAuto == Just Empty
+       ]
+
+

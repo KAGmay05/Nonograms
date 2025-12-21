@@ -5,17 +5,25 @@ C:\Nonograms\README.md:
 C:\Nonograms\nonograms.cabal:
   hash: 004fb2ce026a5b831a87282c86509db2f3a4ef7262b7d7411d0c27198cfd3af1
 C:\Nonograms\src\Board.hs:
-  hash: 81492001c773c970e87782bc6d511109caaf6adfe9946b370525ff9c81ae1300
+  hash: 17ef8015b881d5cb6c16d9a99631697d7280fd4b79401f0e8b413b71de0e116b
 C:\Nonograms\src\Game.hs:
-  hash: 20665cc90e784704ed032f82c47e6f7b9e96a2631094129c5b5a8d1c450183b2
+  hash: 4fd8e2f3c1f123f183ce5bcf2b14214c7f391202acc1113821eda0ce8cace38d
 C:\Nonograms\src\LevelSelection.hs:
-  hash: 0ae26d02d35528f2d8a59c48ce7d725e37acdc6a89c5dac6981ea69a5d18afb7
+  hash: 48409b5722468ebb1636ab1bbb3089c6a7be061d37110c8aeda5e803d11ae3eb
 C:\Nonograms\src\Levels\Level1.hs:
   hash: abf172acd14314fbd45be1183e98e4557d3c9f744ee629131dfa666c31c9126b
 C:\Nonograms\src\Levels\Level2.hs:
   hash: a0f08be9fa81ee0089dbc3731f6dde88c2ffc65567917ade184092e3d4d7e341
+C:\Nonograms\src\Levels\Level3.hs:
+  hash: 82036e49e457f98ab8c37fb861e677b258e78dee947c290a0c5f03a030ba1ed5
+C:\Nonograms\src\Levels\Level4.hs:
+  hash: 9385bced9bf15dfcee4cbca45a5d5fd494f3dc64ca22ebc385c555a41659262a
+C:\Nonograms\src\Levels\Level5.hs:
+  hash: 947047ba350afd57e690440499f538362d89df7c3ab1d33ddb25c0d591573a43
+C:\Nonograms\src\Levels\Level6.hs:
+  hash: 5cf4997044ec756e1a480f1d33774a13477ee0f85fbb80197823fb05fd47a524
 C:\Nonograms\src\Main.hs:
-  hash: 8bf191c2d7076e82b1fe30c60397de1850896e6c3ce37de882a9d6b00a86e9ac
+  hash: dcd9c46bbbde41af9bcbb3e8b7b2478147b34064f5d8e60b7078989e321173c4
 C:\Nonograms\src\Types.hs:
   hash: fcc18ca8e6a316ed8a6598c969116421e2f47cc56c29f7a2967d3cf0fc63c442
 C:\Nonograms\src\Welcome.hs:
