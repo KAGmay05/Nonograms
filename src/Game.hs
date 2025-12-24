@@ -228,7 +228,7 @@ gamePage window rowClues colClues = do
     -- ----------------------------
     -- Botones modernos
     -- ----------------------------
-    newBtn <- UI.button #+ [string "Pista"] # set UI.style modernGreen
+    newBtn <- UI.button #+ [string "Resolver"] # set UI.style modernGreen
     resetBtn <- UI.button #+ [string "Reiniciar"] # set UI.style modernRed
     backBtn <- UI.button #+ [string "←"] # set UI.style modernGreen
     modeBtn <- UI.button # set UI.style modernGreen
@@ -379,10 +379,33 @@ gamePage window rowClues colClues = do
         runFunction $ ffi "setTimeout(function(){%1.click()},10)" backBtn
 
 
-
-
     on UI.click newBtn $ \_ -> do
-        return ()
+       -- Leer tablero actual
+       b <- liftIO $ readIORef boardRef
+
+       -- Ejecutar solver
+       let solutions = solveBoard rowClues colClues b
+
+       case solutions of
+         [] -> return ()  -- no hay solución válida
+         (sol:_) -> do
+            -- Escribir la solución completa
+            liftIO $ writeIORef boardRef sol
+
+            -- Limpiar estados automáticos
+            liftIO $ writeIORef autoRef []
+            liftIO $ writeIORef lockedAutoRef []
+
+            -- Actualizar UI (esto mostrará victoria automáticamente)
+            updateBoardUI
+                boardRef
+                cellButtonsRef
+                rCount
+                cCount
+                statusSpan
+                winOverlay
+                rowClues
+                colClues
 
     on UI.click resetBtn $ \_ -> do
         liftIO $ writeIORef boardRef (board $ initGame rowCluesEx colCluesEx)

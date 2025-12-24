@@ -212,4 +212,43 @@ autoEmptyPositions rc cc b =
        , getCellM r c bAuto == Just Empty
        ]
 
+-- ----------------------------
+-- SOLVER AUTOMÁTICO (BACKTRACKING)
+-- ----------------------------
+
+-- Encuentra la primera celda Unknown
+findUnknown :: Board -> Maybe (Int, Int)
+findUnknown b =
+    let (rs, cs) = boardSize b
+    in case [ (r,c)
+            | r <- [0 .. rs - 1]
+            , c <- [0 .. cs - 1]
+            , getCellM r c b == Just Unknown
+            ] of
+        []    -> Nothing
+        (x:_) -> Just x
+
+
+-- Solver principal: devuelve TODAS las soluciones posibles
+solveBoard :: [[Int]] -> [[Int]] -> Board -> [Board]
+solveBoard rc cc board =
+    let board' = autoCompleteBoard rc cc board
+    in
+    -- poda temprana
+    if boardContradicts rc cc board'
+        then []
+        else
+            case findUnknown board' of
+                -- No quedan incógnitas
+                Nothing ->
+                    if boardSatisfies rc cc board'
+                        then [board']
+                        else []
+                -- Probar Filled y Empty
+                Just (r,c) ->
+                    let try val =
+                            case setCell (r,c) val board' of
+                                Nothing -> []
+                                Just b' -> solveBoard rc cc b'
+                    in try Filled ++ try Empty
 
