@@ -380,11 +380,11 @@ gamePage window rowClues colClues = do
 
 
     on UI.click newBtn $ \_ -> do
-       -- Leer tablero actual
-       b <- liftIO $ readIORef boardRef
+       -- Crear tablero vacio de las mismas dimensiones
+       let emptyB = emptyBoard (length rowClues) (length colClues)
 
        -- Ejecutar solver
-       let solutions = solveBoard rowClues colClues b
+       let solutions = solveBoard rowClues colClues emptyB
 
        case solutions of
          [] -> return ()  -- no hay solución válida
