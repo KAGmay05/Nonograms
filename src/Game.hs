@@ -105,6 +105,28 @@ gamePage window rowClues colClues = do
         , ("letter-spacing","1px")
         ]
 
+    winPreviewTitle <- UI.span # set text "Dibujo del nivel" # set UI.style
+        [ ("font-size","14px")
+        , ("letter-spacing","0.6px")
+        , ("text-transform","uppercase")
+        , ("color","#dcdcdc")
+        ]
+
+    winPreview <- UI.pre # set UI.style
+        [ ("margin","0")
+        , ("padding","12px 14px")
+        , ("background","#0a0a0f")
+        , ("border","1px solid #2b2b35")
+        , ("border-radius","10px")
+        , ("font-family","'Fira Code', 'Cascadia Code', monospace")
+        , ("font-size","16px")
+        , ("line-height","1.1em")
+        , ("color","#ffffff")
+        , ("min-width","220px")
+        , ("text-align","center")
+        , ("box-shadow","inset 0 0 12px rgba(255,255,255,0.04), 0 8px 30px rgba(0,0,0,0.35)")
+        ]
+
     winButtonsRow <- UI.div # set UI.style
         [ ("display","flex")
         , ("gap","12px")
@@ -114,7 +136,7 @@ gamePage window rowClues colClues = do
     winBack  <- UI.button #+ [string "Elegir otro nivel"] # set UI.style modernRed
 
     element winButtonsRow #+ [element winRetry, element winBack]
-    element winCard #+ [element winTitle, element winButtonsRow]
+    element winCard #+ [element winTitle, element winPreviewTitle, element winPreview, element winButtonsRow]
     element winOverlay #+ [element winCard]
 
     -- Contenedor general en grid 2x2
@@ -192,7 +214,7 @@ gamePage window rowClues colClues = do
                 -- No permitir cambios sobre cruces iniciales bloqueadas
                 locked <- liftIO $ readIORef lockedAutoRef
                 if (r,c) `elem` locked
-                  then updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+                  then updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues
                   else do
                     mode <- liftIO $ readIORef modeRef
                     oldAuto <- liftIO $ readIORef autoRef
@@ -215,7 +237,7 @@ gamePage window rowClues colClues = do
                         b2 = foldl (\acc (rr,cc) -> maybe acc id (setCell (rr,cc) Empty acc)) b1 newAuto
                     liftIO $ writeIORef boardRef b2
                     liftIO $ writeIORef autoRef newAuto
-                    updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+                    updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues
             return cellBtn
         liftIO $ modifyIORef cellButtonsRef (++ [rowElems])
 
@@ -371,7 +393,7 @@ gamePage window rowClues colClues = do
         liftIO $ writeIORef boardRef bR'
         liftIO $ writeIORef lockedAutoRef initLocks
         liftIO $ writeIORef autoRef []
-        updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+        updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues
         void $ element winOverlay # set UI.style [("display","none")]
     on UI.click winBack $ \_ -> do
         void $ element winOverlay # set UI.style [("display","none")]
@@ -404,6 +426,7 @@ gamePage window rowClues colClues = do
                 cCount
                 statusSpan
                 winOverlay
+                winPreview
                 rowClues
                 colClues
 
@@ -416,7 +439,7 @@ gamePage window rowClues colClues = do
         liftIO $ writeIORef boardRef bR'
         liftIO $ writeIORef lockedAutoRef initLocks
         liftIO $ writeIORef autoRef []
-        updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+        updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues
         void $ element winOverlay # set UI.style [("display","none")]
 
 
@@ -429,7 +452,7 @@ gamePage window rowClues colClues = do
     liftIO $ writeIORef boardRef b1
     liftIO $ writeIORef lockedAutoRef autoPos
     liftIO $ writeIORef autoRef []
-    updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay rowClues colClues
+    updateBoardUI boardRef cellButtonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues
     return (gameRoot, backBtn)
 
 -- ----------------------------
@@ -481,8 +504,15 @@ modernRed =
 -- ----------------------------
 -- ACTUALIZAR TABLERO VISUAL
 -- ----------------------------
-updateBoardUI :: IORef Board -> IORef [[Element]] -> Int -> Int -> Element -> Element -> [[Int]] -> [[Int]] -> UI ()
-updateBoardUI boardRef buttonsRef rCount cCount statusSpan winOverlay rowClues colClues = do
+renderBoardAscii :: Board -> String
+renderBoardAscii = unlines . map (concatMap cellChar)
+    where
+        cellChar Filled  = "██"
+        cellChar Empty   = "  "
+        cellChar Unknown = "░░"
+
+updateBoardUI :: IORef Board -> IORef [[Element]] -> Int -> Int -> Element -> Element -> Element -> [[Int]] -> [[Int]] -> UI ()
+updateBoardUI boardRef buttonsRef rCount cCount statusSpan winOverlay winPreview rowClues colClues = do
     b <- liftIO $ readIORef boardRef
     btns <- liftIO $ readIORef buttonsRef
     let badRows = [i | (i,(cl,row)) <- zip [0..] (zip rowClues b), rowContradicts cl row]
@@ -512,12 +542,15 @@ updateBoardUI boardRef buttonsRef rCount cCount statusSpan winOverlay rowClues c
     if bad
         then do
             void $ element statusSpan # set text "Error" # set UI.style [("color","#ff2f45"),("font-size","16px"),("font-weight","700"),("display","block"),("visibility","visible")]
+            void $ element winPreview # set text ""
             void $ element winOverlay # set UI.style [("display","none")]
         else if solved
             then do
                 void $ element statusSpan # set text "" # set UI.style [("display","block"),("visibility","hidden")]
+                void $ element winPreview # set text (renderBoardAscii b)
                 void $ element winOverlay # set UI.style [("display","flex")]
             else do
                 void $ element statusSpan # set text "" # set UI.style [("display","block"),("visibility","hidden")]
+                void $ element winPreview # set text ""
                 void $ element winOverlay # set UI.style [("display","none")]
 
