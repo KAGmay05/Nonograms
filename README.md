@@ -12,6 +12,4 @@ Este proyecto está desarrollado en Haskell, que actualmente cuenta con 6 nivele
 - La aplicación te indica si una casilla marcada (gris o cruz) incumple las reglas del nonograma.
 - Al completar correctamente las reglas de una fila o columna, las casillas blancas restantes se marcan automáticamente con cruces.
 - El sistema te avisa cuando has terminado de resolver el nivel.
-
-# Funcionalidades pendientes:
-- Implementar un algoritmo que pueda resolver cualquier nonograma de forma automática o de pistas cuando lo pida el usuario.
+-  Resolver cualquier nonograma de forma automática.
